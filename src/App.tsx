@@ -10,7 +10,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
-
+          <Route path="/:id" element={<Home />} />
           {/* Redirect automatically all unknown routes to home */}
           <Route path="*" element={<Home />} />
         </Routes>

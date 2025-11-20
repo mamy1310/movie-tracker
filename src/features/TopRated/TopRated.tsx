@@ -3,9 +3,15 @@ import { use } from "react";
 import { Suspense } from "react";
 import Skeleton from "@mui/material/Skeleton";
 import topRatedMoviesPromise from "./TopRatedUtils";
+import { useNavigate } from "react-router-dom";
 
 export default function TopRated() {
     const movieItems = use(topRatedMoviesPromise);
+    const navigate = useNavigate();
+
+    const handleMovieClick = (movieId: number) => {
+        navigate(`/${movieId}`);
+    }
 
     return (
         <Suspense fallback={
@@ -15,7 +21,7 @@ export default function TopRated() {
                 ))}
             </div>
         }>
-            <Carousel movies={movieItems} title="Les mieux notés" />
+            <Carousel movies={movieItems} title="Les mieux notés" onMovieClick={handleMovieClick} />
         </Suspense>
     );
 }

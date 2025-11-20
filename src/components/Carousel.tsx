@@ -6,9 +6,10 @@ import PosterCard from "./PosterCard"
 type CarouselProps = {
     movies: DiscoverMovieItem[];
     title?: string;
+    onMovieClick?: (movieId: number) => void;
 }
 
-export default function Carousel({ movies, title }: CarouselProps) {
+export default function Carousel({ movies, title, onMovieClick }: CarouselProps) {
     return (
         <Stack direction="column" spacing={2}>
             {title && (
@@ -16,9 +17,26 @@ export default function Carousel({ movies, title }: CarouselProps) {
                     {title}
                 </Typography>
             )}
-            <Stack direction="row" spacing={2} overflow="auto">
+            <Stack
+                direction="row"
+                spacing={2}
+                sx={{
+                    overflowX: "auto",
+                    overflowY: "hidden",
+                    "&::-webkit-scrollbar": {
+                        height: 8,
+                    },
+                    "&::-webkit-scrollbar-track": {
+                        backgroundColor: "transparent",
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                        backgroundColor: "rgba(0,0,0,0.2)",
+                        borderRadius: "4px",
+                    },
+                }}
+            >
                 {movies.map(movieItem => (
-                    <PosterCard key={movieItem.id} {...movieItem} />
+                    <PosterCard key={movieItem.id} movie={movieItem} onClick={() => onMovieClick?.(movieItem.id)} />
                 ))}
             </Stack>
         </Stack>
