@@ -1,15 +1,17 @@
 import Drawer from "@mui/material/Drawer";
-import { useNavigate, useParams } from "react-router-dom";
 import MovieDetails from "./MovieDetails";
 
-export default function MovieDetailsDrawer() {
-    const { id } = useParams<{ id: string }>();
-    const navigate = useNavigate();
+interface MovieDetailsDrawerProps {
+    id?: string;
+    onClose: () => void;
+}
+
+export default function MovieDetailsDrawer({ id, onClose }: MovieDetailsDrawerProps) {
 
     return (
         <Drawer
             open={Boolean(id)}
-            onClose={() => navigate("/")}
+            onClose={onClose}
             anchor="bottom"
             className="drawer"
             hideBackdrop={false}
@@ -17,7 +19,7 @@ export default function MovieDetailsDrawer() {
                 paper: {
                     sx: {
                         height: "95vh",
-                        width: { xs: "100%", md: "50%" },
+                        width: { xs: "100%", md: "75%", lg: "50%" },
                         marginLeft: "auto",
                         marginRight: "auto",
                         left: 0,
@@ -27,24 +29,11 @@ export default function MovieDetailsDrawer() {
                         border: "0.5px solid grey",
                         borderRadius: "24px 24px 0 0",
                         backgroundColor: "rgb(0, 0, 0)",
-                        "&::-webkit-scrollbar": {
-                            width: 0,
-                        },
-                        "&::-webkit-scrollbar-track": {
-                            backgroundColor: "transparent",
-                        },
-                        "&::-webkit-scrollbar-thumb": {
-                            backgroundColor: "rgba(0,0,0,0)",
-                            borderRadius: "4px",
-                        },
-                        "&::-webkit-scrollbar-thumb:hover": {
-                            backgroundColor: "rgba(0,0,0,0)",
-                        },
                     }
                 }
             }}
         >
-            {id && <MovieDetails />}
+            {id && <MovieDetails onClose={onClose} />}
         </Drawer>
     )
 }

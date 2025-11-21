@@ -13,6 +13,7 @@ export type DiscoverMovieItem = {
   video: boolean;
   vote_average: number;
   vote_count: number;
+  images?: MovieImagesResponse;
 };
 
 export type DiscoverMovieResponse = {
@@ -20,4 +21,21 @@ export type DiscoverMovieResponse = {
   results: DiscoverMovieItem[];
   total_pages: number;
   total_results: number;
+};
+
+export type ImageItem = {
+  aspect_ratio: number;
+  height: number;
+  iso_639_1: string | null;
+  file_path: string;
+  vote_average: number;
+  vote_count: number;
+  width: number;
+};
+
+export type MovieImagesResponse = {
+  backdrops: ImageItem[];
+  logos: ImageItem[];
+  posters: ImageItem[];
+  id: number;
 };

@@ -6,8 +6,14 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { grey } from "@mui/material/colors";
 import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
-export default function MovieDetails() {
+interface MovieDetailsProps {
+    onClose?: () => void;
+}
+
+export default function MovieDetails({ onClose }: MovieDetailsProps) {
     const { id } = useParams<{ id: string }>();
 
     if (!id) throw new Error("ID du film manquant");
@@ -17,33 +23,71 @@ export default function MovieDetails() {
     const movieDetails = use(movieDetailsPromise);
 
     return (
-        <Box height={"100%"} role="presentation" sx={{ backgroundColor: "rgb(0, 0, 0)", color: "white" }}>
+        <Box height={"100%"} role="presentation" sx={{ backgroundColor: "rgb(0, 0, 0)", color: "white", display: "flex", flexDirection: "column", position: "relative" }}>
+            {/* Bouton de fermeture */}
+            {onClose && (
+                <IconButton
+                    onClick={onClose}
+                    sx={{
+                        position: "absolute",
+                        top: 16,
+                        right: 16,
+                        zIndex: 1000,
+                        backgroundColor: "rgba(0, 0, 0, 0.6)",
+                        color: "white",
+                        "&:hover": {
+                            backgroundColor: "rgba(0, 0, 0, 0.8)",
+                        },
+                    }}
+                >
+                    <CloseIcon />
+                </IconButton>
+            )}
             <Suspense fallback={
                 <Skeleton variant="rectangular" width="100%" height={400} />
             }>
-                <Stack direction="column" spacing={3}>
-                    {movieDetails.backdrop_path && (
-                        <div style={{ position: "relative", overflow: "hidden" }}>
-                            <img
-                                src={`${localStorage.getItem("image_base_url")}original${movieDetails.backdrop_path}`}
-                                alt={movieDetails.title}
-                                style={{ width: "100%", height: "400px", objectFit: "cover" }}
-                            />
-                            <div
-                                style={{
-                                    position: "absolute",
-                                    top: 0,
-                                    left: 0,
-                                    right: 0,
-                                    bottom: 0,
-                                    background: "linear-gradient(180deg, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 1) 99%)",
-                                    pointerEvents: "none"
-                                }}
-                            />
-                        </div>
-                    )}
+                {/* Image fixe en haut */}
+                {movieDetails.backdrop_path && (
+                    <Box sx={{ position: "relative", overflow: "hidden", flexShrink: 0 }}>
+                        <img
+                            src={`${localStorage.getItem("image_base_url")}original${movieDetails.backdrop_path}`}
+                            alt={movieDetails.title}
+                            style={{ width: "100%", height: "400px", objectFit: "cover" }}
+                        />
+                        <Box
+                            sx={{
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                background: "linear-gradient(180deg, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 1) 99%)",
+                                pointerEvents: "none"
+                            }}
+                        />
+                    </Box>
+                )}
 
-                    <Stack direction="column" spacing={2} sx={{ padding: 2 }}>
+                {/* Contenu scrollable */}
+                <Box sx={{
+                    flex: 1,
+                    padding: 2,
+                    overflowY: "auto",
+                    "&::-webkit-scrollbar": {
+                        width: 0,
+                    },
+                    "&::-webkit-scrollbar-track": {
+                        backgroundColor: "transparent",
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                        backgroundColor: "rgba(0,0,0,0)",
+                        borderRadius: "4px",
+                    },
+                    "&::-webkit-scrollbar-thumb:hover": {
+                        backgroundColor: "rgba(0,0,0,0)",
+                    },
+                }}>
+                    <Stack direction="column" spacing={2}>
                         <Typography variant="h5" component="h1">
                             {movieDetails.title}
                         </Typography>
@@ -157,7 +201,7 @@ export default function MovieDetails() {
                             )
                         }
                     </Stack>
-                </Stack>
+                </Box>
             </Suspense>
         </Box>
     );
