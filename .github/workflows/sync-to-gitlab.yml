@@ -1,0 +1,29 @@
+name: Sync to GitLab
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout GitHub repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "mamitiana_rakotoarisoa@yahoo.com"
+          git config --global user.name "mamy1310"
+
+      - name: Add GitLab remote
+        run: |
+          git remote add gitlab https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/Mamitiana1437/movie-tracker.git
+
+      - name: Push to GitLab
+        run: |
+          git push gitlab main --force
