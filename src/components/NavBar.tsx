@@ -60,7 +60,7 @@ export default function MenuAppBar() {
                             style={{
                                 width: '24px',
                                 height: '24px',
-                                filter: 'invert(1)' // Pour rendre le logo blanc
+                                filter: 'invert(1)'
                             }}
                         />
                     </IconButton>
