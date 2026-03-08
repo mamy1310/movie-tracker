@@ -2,3 +2,13 @@ body {
     background-color: rgb(0, 0, 0);
     color: white;
 }
+
+.custom-textfield .MuiInputBase-input {
+    color: #fff;
+    background: #181818;
+    border-radius: 4px;
+}
+
+.custom-textfield .MuiInputLabel-root {
+    color: #bbb;
+}

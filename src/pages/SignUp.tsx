@@ -1,7 +1,35 @@
-import { Box, Button, TextField, Typography, Paper, Link } from "@mui/material";
-import { Link as RouterLink } from "react-router-dom";
+import { Box, Button, Typography, Paper, Link } from "@mui/material";
+import TextField from "../components/CustomTextField";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useUser } from "../contexts/UserContext";
+import { validateEmail } from "../utils/validateEmail";
 
 const SignUp = () => {
+	const [name, setName] = useState("");
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [emailError, setEmailError] = useState("");
+	const { login } = useUser();
+	const navigate = useNavigate();
+
+	const handleSubmit = (e: React.FormEvent) => {
+		e.preventDefault();
+		setEmailError("");
+		if (!validateEmail(email)) {
+			setEmailError("Adresse email invalide");
+			return;
+		}
+		if (name && email && password) {
+			login({
+				id: "mock-user-id",
+				email: email,
+				name: name,
+			});
+
+			navigate("/");
+		}
+	};
 	return (
 		<Box
 			display="flex"
@@ -36,62 +64,36 @@ const SignUp = () => {
 					display="flex"
 					flexDirection="column"
 					gap={2}
+					onSubmit={handleSubmit}
 				>
 					<TextField
 						label="Nom"
 						type="text"
-						variant="outlined"
-						required
-						fullWidth
-						slotProps={{ inputLabel: { shrink: true } }}
-						sx={{
-							"& .MuiInputBase-input": {
-								color: "text.primary",
-								background: "background.default",
-								borderRadius: 1,
-							},
-							"& .MuiInputLabel-root": {
-								color: "text.secondary",
-							},
-						}}
+						value={name}
+						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+							setName(e.target.value)
+						}
 					/>
 					<TextField
 						label="Email"
 						type="email"
-						variant="outlined"
-						required
-						fullWidth
-						slotProps={{ inputLabel: { shrink: true } }}
-						sx={{
-							"& .MuiInputBase-input": {
-								color: "text.primary",
-								background: "background.default",
-								borderRadius: 1,
-							},
-							"& .MuiInputLabel-root": {
-								color: "text.secondary",
-							},
-						}}
+						value={email}
+						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+							setEmail(e.target.value)
+						}
+						helperText={emailError}
+						error={!!emailError}
 					/>
 					<TextField
 						label="Mot de passe"
 						type="password"
-						variant="outlined"
-						required
-						fullWidth
-						slotProps={{ inputLabel: { shrink: true } }}
-						sx={{
-							"& .MuiInputBase-input": {
-								color: "text.primary",
-								background: "background.default",
-								borderRadius: 1,
-							},
-							"& .MuiInputLabel-root": {
-								color: "text.secondary",
-							},
-						}}
+						value={password}
+						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+							setPassword(e.target.value)
+						}
 					/>
 					<Button
+						type="submit"
 						variant="contained"
 						color="primary"
 						fullWidth

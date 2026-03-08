@@ -11,6 +11,7 @@ import Star from "@mui/icons-material/Star";
 import { Fragment, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import Link from "@mui/material/Link";
+import { useUser } from "../contexts/UserContext";
 
 function MenuLink() {
 	return (
@@ -52,7 +53,7 @@ function HideOnScroll(props: HideOnScrollProps) {
 }
 
 export default function MenuAppBar() {
-	const [auth, _setAuth] = useState(false);
+	const { isAuthenticated, user, logout } = useUser();
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
 	const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -61,6 +62,11 @@ export default function MenuAppBar() {
 
 	const handleClose = () => {
 		setAnchorEl(null);
+	};
+
+	const handleLogout = () => {
+		logout();
+		handleClose();
 	};
 
 	return (
@@ -98,7 +104,7 @@ export default function MenuAppBar() {
 					>
 						Movie tracker
 					</Typography>
-					{auth ? (
+					{isAuthenticated ? (
 						<Fragment>
 							<IconButton
 								size="large"
@@ -135,10 +141,13 @@ export default function MenuAppBar() {
 								open={Boolean(anchorEl)}
 								onClose={handleClose}
 							>
+								{user?.name && (
+									<MenuItem disabled>{user.name}</MenuItem>
+								)}
 								<MenuItem onClick={handleClose}>
 									Mon profil
 								</MenuItem>
-								<MenuItem onClick={handleClose}>
+								<MenuItem onClick={handleLogout}>
 									Se déconnecter
 								</MenuItem>
 							</Menu>
